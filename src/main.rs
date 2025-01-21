@@ -22,5 +22,15 @@ fn select_opt() -> String {
 }
 
 fn main() {
-    println!("Hello, world!");
+    welcome();
+    let option = select_opt().trim().parse().unwrap_or_else(|_| {
+        // TODO loop until a valid option is selected
+        println!("Invalid input. Please enter a number.");
+        std::process::exit(1);
+    });
+    match option {
+        1 => println!("Option 1 selected!"),
+        2 => println!("Option 2 selected"),
+        _ => println!("Invalid option!"),
+    }
 }
