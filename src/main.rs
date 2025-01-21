@@ -11,6 +11,16 @@ fn welcome() {
     print!("=> ")
 }
 
+fn select_opt() -> String {
+    let mut option = String::new();
+    let _ = io::stdout().flush();
+    io::stdin()
+        .read_line(&mut option)
+        .expect("Failed to read line.");
+
+    return option;
+}
+
 fn main() {
     println!("Hello, world!");
 }
