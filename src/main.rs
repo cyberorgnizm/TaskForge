@@ -1,8 +1,15 @@
 use std::io::{self, Write};
 
 fn welcome() {
-    const VERSION: f64 = 1.0;
-    println!("Welcome to TaskForge! v{:.1} \n", VERSION);
+    
+    // App message and version scope
+    {
+        const VERSION: f64 = 1.0;
+        let mut welcome_msg = String::from("Welcome to TaskForge!");
+        welcome_msg.push_str(&format!("v{:.1}", VERSION));
+        println!("{} \n", welcome_msg);
+
+    }
     println!("Please select from the option provided:");
     println!("1. Add todo item.");
     println!("2. Edit todo item.");
