@@ -6,7 +6,7 @@ fn welcome() {
     {
         const VERSION: f64 = 1.0;
         let mut welcome_msg = String::from("Welcome to TaskForge!");
-        welcome_msg.push_str(&format!("v{:.1}", VERSION));
+        welcome_msg.push_str(&format!(" v{:.1}", VERSION));
         println!("{} \n", welcome_msg);
 
     }
@@ -18,26 +18,29 @@ fn welcome() {
     print!("=> ")
 }
 
-fn select_opt() -> String {
-    let mut option = String::new();
+fn select_opt(option: &mut String) {
     let _ = io::stdout().flush();
     io::stdin()
-        .read_line(&mut option)
+        .read_line(option)
         .expect("Failed to read line.");
-
-    return option;
 }
 
 fn main() {
     welcome();
-    let option = select_opt().trim().parse().unwrap_or_else(|_| {
+    let mut option = String::new();
+    select_opt(&mut option);
+    
+    let option = option.trim().parse().unwrap_or_else(|_| {
         // TODO loop until a valid option is selected
         println!("Invalid input. Please enter a number.");
         std::process::exit(1);
     });
+
     match option {
         1 => println!("Option 1 selected!"),
-        2 => println!("Option 2 selected"),
+        2 => println!("Option 2 selected!"),
+        3 => println!("Option 3 selected!"),
+        4 => println!("Option 4 selected!"),
         _ => println!("Invalid option!"),
     }
 }
