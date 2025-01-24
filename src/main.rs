@@ -44,6 +44,29 @@ fn select_opt(option: &mut String) {
         .expect("Failed to read line.");
 }
 
+fn add_todo() {
+    print!("Enter the name of the task: ");
+    let _ = io::stdout().flush();
+    let mut title = String::new();
+    io::stdin()
+        .read_line(&mut title)
+        .expect("Failed to read line.");
+    let mut task = new_task(title, false);
+
+    println!("Todo Item created!");
+    println!("{}", task.title);
+    println!("Mark as completed(Y/N): {}", task.is_completed);
+
+    let resp = String::new();
+
+    let resp = resp.trim();
+
+    if resp == "Y" {
+        task.complete();
+    }
+}
+
+
 fn main() {
     welcome();
     let mut option = String::new();
@@ -56,7 +79,7 @@ fn main() {
     });
 
     match option {
-        1 => println!("Option 1 selected!"),
+        1 => add_todo(),
         2 => println!("Option 2 selected!"),
         3 => println!("Option 3 selected!"),
         4 => println!("Option 4 selected!"),
