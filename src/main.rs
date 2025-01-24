@@ -1,7 +1,26 @@
 use std::io::{self, Write};
 
+#[derive(Debug)]
+struct Task {
+    title: String,
+    is_completed: bool
+}
+
+impl Task {
+    fn complete(&mut self) -> bool {
+        self.is_completed = true;
+        return  self.is_completed
+    }
+}
+
+fn new_task(title: String, is_completed: bool) -> Task {
+    Task {
+        title,
+        is_completed
+    }
+}
+
 fn welcome() {
-    
     // App message and version scope
     {
         const VERSION: f64 = 1.0;
