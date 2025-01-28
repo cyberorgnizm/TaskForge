@@ -1,6 +1,6 @@
 use std::{
     io::{self, Write},
-    sync::mpsc,
+    sync::{mpsc, Arc, Mutex},
     thread,
     time::Duration,
 };
@@ -96,7 +96,9 @@ fn edit_todo(tasks: &mut Vec<Task>) {
 
 fn main() {
     // fearless_concurrency();
-    channels();
+    // channels();
+    // slices();
+    mutexes();
     // welcome();
     // let mut option = String::new();
     // select_opt(&mut option);
@@ -116,6 +118,31 @@ fn main() {
     //     4 => println!("Option 4 selected!"),
     //     _ => println!("Invalid option!"),
     // }
+}
+
+// Slice
+fn first_word(s: &String) -> &str {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &s[0..i];
+        }
+    }
+
+    &s[..]
+}
+
+fn slices() {
+    let mut s = String::from("Hello World!");
+    let hello = &s[0..5];
+    let world = &s[6..12];
+
+    println!("1 => {hello}");
+    println!("2 => {world}");
+
+    let word = first_word(&s);
+    println!("First word: {word}");
 }
 
 // Threads
@@ -173,4 +200,39 @@ fn channels() {
     for received in rx {
         println!("Got: {received}");
     }
+}
+
+
+fn mutexes() {
+    let m = Mutex::new(5);
+
+    {
+        let mut num = m.lock().unwrap();
+        *num = 6;
+    }
+
+    println!("m = {m:?}");
+
+    shared_mutexes();
+}
+
+fn shared_mutexes() {
+    let counter = Arc::new(Mutex::new(0));
+    let mut handles = vec![];
+
+    for _ in 0..10 {
+        let counter = Arc::clone(&counter);
+        let handle = thread::spawn(move || {
+            let mut num = counter.lock().unwrap();
+
+            *num += 1;
+        });
+        handles.push(handle);
+    }
+
+    for handle in handles {
+        handle.join().unwrap();
+    }
+
+    println!("Result: {}", *counter.lock().unwrap());
 }
