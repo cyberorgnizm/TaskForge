@@ -1,5 +1,6 @@
 use std::{
-    io::{self, Write},
+    fs::File,
+    io::{self, Error, Read, Write},
     sync::{mpsc, Arc, Mutex},
     thread,
     time::Duration,
@@ -98,7 +99,8 @@ fn main() {
     // fearless_concurrency();
     // channels();
     // slices();
-    mutexes();
+    // mutexes();
+    error_handling();
     // welcome();
     // let mut option = String::new();
     // select_opt(&mut option);
@@ -196,12 +198,10 @@ fn channels() {
         }
     });
 
-
     for received in rx {
         println!("Got: {received}");
     }
 }
-
 
 fn mutexes() {
     let m = Mutex::new(5);
@@ -235,4 +235,54 @@ fn shared_mutexes() {
     }
 
     println!("Result: {}", *counter.lock().unwrap());
+}
+
+// Error handling
+fn error_handling() {
+    let ans = division(12, 6).expect("Failed to divide");
+    println!("Division = {ans}");
+
+    open_file();
+    read_username_from_file().expect("Error reading username");
+    read_username_from_file_v2().expect("Error reading username from file");
+}
+
+fn open_file() {
+    let file = File::open("example.txt");
+
+    if let Ok(mut val) = file {
+        let mut string = String::new();
+        let _ = val.read_to_string(&mut string);
+        println!("Content here: {string}");
+    }
+}
+
+fn read_username_from_file() -> Result<String, io::Error> {
+    let username_file_result = File::open("names.txt");
+
+    let mut username_file = match username_file_result {
+        Ok(file) => file,
+        Err(err) => return Err(err),
+    };
+
+    let mut username = String::new();
+
+    match username_file.read_to_string(&mut username) {
+        Ok(_) => Ok(username),
+        Err(e) => Err(e),
+    }
+}
+
+fn read_username_from_file_v2() -> Result<String, io::Error> {
+    let mut username_file = File::open("hello.txt")?;
+    let mut username = String::new();
+    username_file.read_to_string(&mut username)?;
+    Ok(username)
+}
+
+fn division(a: u32, b: u32) -> Result<u32, String> {
+    if b == 0 {
+        return Err(String::from("Cannot divide by zero"));
+    }
+    return Ok(a / b);
 }
