@@ -6,8 +6,10 @@ use std::{
 };
 
 use errors::{*};
+use text::{Summary, Tweet};
 
 mod errors;
+mod text;
 
 #[derive(Debug)]
 struct Task {
@@ -238,4 +240,18 @@ fn shared_mutexes() {
     }
 
     println!("Result: {}", *counter.lock().unwrap());
+}
+
+// Traits
+fn tweet() {
+    let tweet = Tweet {
+        username: String::from("horse_ebooks"),
+        content: String::from(
+            "of course, as you probably already know, people",
+        ),
+        reply: false,
+        retweet: false,
+    };
+
+    println!("1 new tweet: {}", tweet.summarize());
 }
